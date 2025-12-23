@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-charcoal-950 text-charcoal-100 min-h-screen font-sans;
+    background-image: radial-gradient(
+        at 0% 0%,
+        rgba(76, 175, 80, 0.1) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 100% 100%,
+        rgba(255, 191, 0, 0.05) 0px,
+        transparent 50%
+      );
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-charcoal-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl;
+  }
+
+  .glass-button {
+    @apply relative overflow-hidden transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply glass-button bg-sage-500 hover:bg-sage-600 text-white px-6 py-2.5 rounded-xl font-medium shadow-lg shadow-sage-500/20;
+  }
+
+  .btn-secondary {
+    @apply glass-button bg-charcoal-800 hover:bg-charcoal-700 text-charcoal-100 px-6 py-2.5 rounded-xl font-medium border border-white/5;
+  }
+
+  .btn-outline {
+    @apply glass-button bg-transparent border border-sage-500/50 hover:bg-sage-500/10 text-sage-400 px-6 py-2.5 rounded-xl font-medium;
+  }
+
+  .input-field {
+    @apply bg-charcoal-900/50 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sage-500/50 transition-all text-white placeholder-charcoal-400;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-charcoal-950;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-charcoal-800 rounded-full hover:bg-charcoal-700 transition-colors;
+}

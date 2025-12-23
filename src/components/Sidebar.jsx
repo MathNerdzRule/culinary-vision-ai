@@ -1,0 +1,108 @@
+import React from 'react';
+import { useAppContext } from '../context/AppContext';
+import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const DIETARY_OPTIONS = [
+  { id: 'Vegan', label: 'Vegan', icon: Leaf },
+  { id: 'Vegetarian', label: 'Vegetarian', icon: Carrot },
+  { id: 'Keto', label: 'Keto', icon: Flame },
+  { id: 'Gluten-Free', label: 'Gluten-Free', icon: WheatOff },
+  { id: 'Dairy-Free', label: 'Dairy-Free', icon: MilkOff },
+];
+
+export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
+  const { dietaryPreferences, setDietaryPreferences } = useAppContext();
+
+  const togglePreference = (id) => {
+    setDietaryPreferences(prev => 
+      prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
+    );
+  };
+
+  const navItems = [
+    { id: 'home', label: 'Dashboard', icon: Home },
+    { id: 'recipes', label: 'Recipes', icon: ChefHat },
+    { id: 'shopping', label: 'Shopping List', icon: ShoppingCart },
+  ];
+
+  return (
+    <>
+      {/* Mobile Backdrop */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-charcoal-900 border-r border-white/5 p-6 flex flex-col z-[70] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-sage-500 rounded-xl flex items-center justify-center shadow-lg shadow-sage-500/20">
+              <ChefHat className="text-white w-6 h-6" />
+            </div>
+            <h1 className="text-xl font-bold bg-gradient-to-br from-white to-charcoal-400 bg-clip-text text-transparent">
+              Culinary Vision
+            </h1>
+          </div>
+          <button onClick={() => setIsOpen(false)} className="lg:hidden text-charcoal-400">
+            <X size={20} />
+          </button>
+        </div>
+
+        <nav className="space-y-2 mb-10">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => {
+                setActiveTab(item.id);
+                setIsOpen(false);
+              }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                activeTab === item.id 
+                  ? 'bg-sage-500/10 text-sage-400 border border-sage-500/20' 
+                  : 'text-charcoal-400 hover:bg-white/5 hover:text-white'
+              }`}
+            >
+              <item.icon size={20} />
+              <span className="font-medium">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+
+        <div className="mt-auto">
+          <h2 className="text-xs font-semibold text-charcoal-500 uppercase tracking-wider mb-4 px-4">
+            Dietary Preferences
+          </h2>
+          <div className="space-y-1">
+            {DIETARY_OPTIONS.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => togglePreference(option.id)}
+                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
+                  dietaryPreferences.includes(option.id)
+                    ? 'bg-sage-500/10 text-sage-400 border border-sage-500/20'
+                    : 'text-charcoal-400 hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <option.icon size={18} />
+                  <span className="text-sm font-medium">{option.label}</span>
+                </div>
+                {dietaryPreferences.includes(option.id) && (
+                  <div className="w-1.5 h-1.5 rounded-full bg-sage-500 shadow-[0_0_8px_rgba(76,175,80,0.8)]" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+      </aside>
+    </>
+  );
+};
