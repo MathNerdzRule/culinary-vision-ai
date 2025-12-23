@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Scan, Loader2, Menu, ChefHat } from 'lucide-react';
 
 const Dashboard = ({ onOpenMenu }) => {
+  const isDemo = !import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === "your_api_key_here";
   const { 
     fridgeImage, setFridgeImage, 
     pantryImage, setPantryImage, 
@@ -59,14 +60,26 @@ const Dashboard = ({ onOpenMenu }) => {
 
       {/* Hero Section */}
       <section className="text-center space-y-6 py-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-500/10 text-sage-400 border border-sage-500/20 text-sm font-bold uppercase tracking-widest mb-4"
-        >
-          <Sparkles size={16} />
-          <span>AI-Powered Culinary Assistant</span>
-        </motion.div>
+        <div className="flex flex-col items-center gap-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sage-500/10 text-sage-400 border border-sage-500/20 text-sm font-bold uppercase tracking-widest"
+          >
+            <Sparkles size={16} />
+            <span>AI-Powered Culinary Assistant</span>
+          </motion.div>
+          
+          {isDemo && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-[10px] font-bold text-amber-500/80 uppercase tracking-tighter border border-amber-500/20 px-2 py-0.5 rounded shadow-[0_0_10px_rgba(255,191,0,0.1)]"
+            >
+              Demo Mode Active
+            </motion.div>
+          )}
+        </div>
         <h1 className="text-5xl md:text-7xl font-black text-white leading-tight">
           What's in your <br />
           <span className="text-sage-500">Kitchen today?</span>

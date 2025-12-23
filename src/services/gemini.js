@@ -1,55 +1,25 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { MOCK_RECIPES } from "./mockData";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
-const genAI = new GoogleGenerativeAI(API_KEY);
-
-const RECIPE_SCHEMA = {
-  type: "object",
-  properties: {
-    recipes: {
-      type: "array",
-      items: {
-        type: "object",
-        properties: {
-          name: { type: "string" },
-          difficulty: { type: "string", enum: ["Easy", "Medium", "Hard"] },
-          prepTime: { type: "string" },
-          calories: { type: "number" },
-          rationale: { type: "string" },
-          ingredients: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                name: { type: "string" },
-                amount: { type: "string" },
-                isAvailable: { type: "boolean" }
-              },
-              required: ["name", "isAvailable"]
-            }
-          },
-          instructions: {
-            type: "array",
-            items: { type: "string" }
-          }
-        },
-        required: ["name", "difficulty", "prepTime", "calories", "rationale", "ingredients", "instructions"]
-      }
-    }
-  },
-  required: ["recipes"]
-};
+const genAI = API_KEY ? new GoogleGenerativeAI(API_KEY) : null;
 
 export const analyzeIngredients = async (fridgeImage, pantryImage, dietaryPreferences) => {
-  if (!API_KEY) {
-    throw new Error("Gemini API Key is missing. Please add VITE_GEMINI_API_KEY to your .env file.");
+  // Demo Mode logic: If no API key is provided, return mock data after a delay
+  if (!API_KEY || API_KEY === "your_api_key_here") {
+    console.warn("Running in Demo Mode: No API Key detected.");
+    // Simulate network/AI delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Filter mock recipes slightly based on dietary preferences if they exist
+    // For simplicity in demo, we return the standard set
+    return { recipes: MOCK_RECIPES };
   }
 
   const model = genAI.getGenerativeModel({ 
     model: "gemini-1.5-flash",
     generationConfig: {
       responseMimeType: "application/json",
-      // responseSchema: RECIPE_SCHEMA, // Some environments might not support strict schema yet in the SDK
     }
   });
 
