@@ -125,7 +125,7 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
         )}
       </div>
 
-      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden glass-card flex flex-col bg-charcoal-50 dark:bg-charcoal-900/20 border-2 border-charcoal-200 dark:border-white/5">
+      <div className="relative min-h-[320px] rounded-2xl overflow-hidden glass-card flex flex-col bg-charcoal-50 dark:bg-charcoal-900/20 border-2 border-charcoal-200 dark:border-white/5">
         <AnimatePresence mode="wait">
           {isCameraOpen ? (
             <motion.div
@@ -133,7 +133,7 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full relative z-10 bg-black"
+              className="absolute inset-0 z-10 bg-black"
             >
               <video
                 ref={videoRef}
@@ -206,13 +206,13 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
               <div className="flex gap-4 mt-4">
                 <button 
                   onClick={() => nativeCameraRef.current?.click()} 
-                  className="btn-primary flex flex-col items-center gap-2 py-4 px-6 min-w-[100px]"
+                  className="btn-primary flex flex-col items-center gap-2 py-3 px-6 min-w-[100px]"
                 >
-                  <Camera size={24} />
+                  <Camera size={20} />
                   <span className="text-[10px] uppercase font-black tracking-widest">Camera</span>
                 </button>
-                <label className="btn-secondary flex flex-col items-center gap-2 py-4 px-6 min-w-[100px] cursor-pointer">
-                  <Upload size={24} />
+                <label className="btn-secondary flex flex-col items-center gap-2 py-3 px-6 min-w-[100px] cursor-pointer">
+                  <Upload size={20} />
                   <span className="text-[10px] uppercase font-black tracking-widest">Upload</span>
                   <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                 </label>
@@ -226,4 +226,3 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
     </div>
   );
 };
-
