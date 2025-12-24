@@ -1,15 +1,18 @@
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X } from 'lucide-react';
+import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X, AlertCircle } from 'lucide-react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeSwitcher } from './ThemeSwitcher';
 
 const DIETARY_OPTIONS = [
   { id: 'Vegan', label: 'Vegan', icon: Leaf },
   { id: 'Vegetarian', label: 'Vegetarian', icon: Carrot },
+  { id: 'GP', label: 'Gastroparesis (GP)', icon: AlertCircle },
   { id: 'Keto', label: 'Keto', icon: Flame },
   { id: 'Gluten-Free', label: 'Gluten-Free', icon: WheatOff },
   { id: 'Dairy-Free', label: 'Dairy-Free', icon: MilkOff },
+
 ];
 
 export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {

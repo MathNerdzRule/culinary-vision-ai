@@ -31,7 +31,16 @@ export default async function handler(req, res) {
       
       Dietary Preferences: ${dietaryPreferences?.join(", ") || "None"}
       
+      ${dietaryPreferences?.includes('GP') ? `
+      CRITICAL: The user has Gastroparesis (GP). All recipes MUST follow these strict guidelines:
+      1. LOW FIBER: Avoid raw vegetables, skins, seeds, nuts, and whole grains. Pureed or well-cooked vegetables only.
+      2. LOW FAT: Limit oils, butter, and high-fat meats.
+      3. EASY DIGESTION: Focus on soft foods, liquid-based dishes, or highly processed refined grains that leave the stomach quickly.
+      4. SMALL PORTIONS: Design recipes that are gentle on a delayed-emptying stomach.
+      ` : ''}
+
       For each recipe, provide:
+
       - Name
       - Difficulty (Easy, Medium, Hard)
       - Prep Time

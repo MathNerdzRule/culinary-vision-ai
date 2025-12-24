@@ -151,7 +151,8 @@ const Dashboard = ({ onOpenMenu }) => {
 const MainApp = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { activeRecipe, setActiveRecipe, syncStatus, isSyncing } = useAppContext();
+  const { activeRecipe, setActiveRecipe, syncStatus, isSyncing, recipes } = useAppContext();
+
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row transition-colors duration-300">
@@ -244,7 +245,11 @@ const MainApp = () => {
                   <div className="w-10" />
                 </div>
                 <h2 className="text-3xl font-bold text-charcoal-900 dark:text-white mb-10">All Recipes</h2>
-                <RecipeList recipes={[]} />
+                <RecipeList 
+                  recipes={recipes} 
+                  onRecipeSelect={setActiveRecipe}
+                />
+
               </div>
             </motion.div>
           )}
