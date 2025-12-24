@@ -16,6 +16,8 @@ export const AppProvider = ({ children }) => {
   const [activeRecipe, setActiveRecipe] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState(null);
+  const [isDemo, setIsDemo] = useState(false);
+
 
   useEffect(() => {
     localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
@@ -67,7 +69,8 @@ export const AppProvider = ({ children }) => {
       pantryImage, setPantryImage,
       isAnalyzing, setIsAnalyzing,
       activeRecipe, setActiveRecipe,
-      isSyncing, syncStatus
+      isSyncing, syncStatus,
+      isDemo, setIsDemo
     }}>
       {children}
     </AppContext.Provider>

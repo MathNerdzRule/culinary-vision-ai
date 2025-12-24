@@ -10,7 +10,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Scan, Loader2, Menu, ChefHat, CheckCircle2, AlertCircle, Cloud } from 'lucide-react';
 
 const Dashboard = ({ onOpenMenu }) => {
-  const isDemo = !import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GEMINI_API_KEY === "your_api_key_here";
   const { 
     fridgeImage, setFridgeImage, 
     pantryImage, setPantryImage, 
@@ -18,7 +17,8 @@ const Dashboard = ({ onOpenMenu }) => {
     setRecipes,
     isAnalyzing, setIsAnalyzing,
     setActiveRecipe,
-    recipes
+    recipes,
+    isDemo, setIsDemo
   } = useAppContext();
 
   const handleAnalyze = async () => {
@@ -31,6 +31,8 @@ const Dashboard = ({ onOpenMenu }) => {
     try {
       const data = await analyzeIngredients(fridgeImage, pantryImage, dietaryPreferences);
       setRecipes(data.recipes);
+      setIsDemo(data.isDemo);
+      
       // Wait a moment for the scroll effect to be smooth
       setTimeout(() => {
         const recipeSection = document.getElementById('recipes-section');
@@ -43,6 +45,7 @@ const Dashboard = ({ onOpenMenu }) => {
       setIsAnalyzing(false);
     }
   };
+
 
   return (
     <div className="max-w-6xl mx-auto py-10 px-6 space-y-16">
