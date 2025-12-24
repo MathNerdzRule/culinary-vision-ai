@@ -11,7 +11,7 @@ import { Sparkles, Scan, Loader2, Menu, ChefHat, CheckCircle2, AlertCircle, Clou
 
 const Dashboard = ({ onOpenMenu }) => {
   const { 
-    fridgeImages, pantryImages, addImage, removeImage, clearImages,
+    kitchenImages, addImage, removeImage, clearImages,
     dietaryPreferences,
     setRecipes,
     isAnalyzing, setIsAnalyzing,
@@ -21,16 +21,17 @@ const Dashboard = ({ onOpenMenu }) => {
   } = useAppContext();
 
   const handleAnalyze = async () => {
-    if (fridgeImages.length === 0 && pantryImages.length === 0) {
-      alert("Please capture or upload at least one image (Fridge or Pantry).");
+    if (kitchenImages.length === 0) {
+      alert("Please capture or upload at least one image of your kitchen.");
       return;
     }
 
     setIsAnalyzing(true);
     try {
-      const data = await analyzeIngredients(fridgeImages, pantryImages, dietaryPreferences);
+      const data = await analyzeIngredients(kitchenImages, [], dietaryPreferences);
       setRecipes(data.recipes);
       setIsDemo(data.isDemo);
+
 
       
       // Wait a moment for the scroll effect to be smooth
@@ -88,35 +89,31 @@ const Dashboard = ({ onOpenMenu }) => {
           <span className="text-sage-500">Kitchen today?</span>
         </h1>
         <p className="text-charcoal-500 dark:text-charcoal-400 text-lg md:text-xl max-w-2xl mx-auto">
-          Take a photo of your fridge and pantry. Gemini 3 will scan your ingredients and suggest the perfect meal.
+          Share photos of your kitchen (fridge, pantry, spices, or counter). Gemini 3 will scan your ingredients and suggest the perfect meal.
         </p>
 
+
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <section className="max-w-4xl mx-auto">
         <CameraSystem 
-          label="Fridge" 
-          images={fridgeImages} 
-          onAdd={(img) => addImage('Fridge', img)} 
-          onRemove={(idx) => removeImage('Fridge', idx)}
-          onClear={() => clearImages('Fridge')}
-        />
-        <CameraSystem 
-          label="Pantry" 
-          images={pantryImages} 
-          onAdd={(img) => addImage('Pantry', img)} 
-          onRemove={(idx) => removeImage('Pantry', idx)}
-          onClear={() => clearImages('Pantry')}
+          label="Kitchen Photos" 
+          images={kitchenImages} 
+          onAdd={addImage} 
+          onRemove={removeImage}
+          onClear={clearImages}
         />
       </section>
+
 
 
       <div className="flex justify-center">
         <button
           onClick={handleAnalyze}
-          disabled={isAnalyzing || (fridgeImages.length === 0 && pantryImages.length === 0)}
+          disabled={isAnalyzing || kitchenImages.length === 0}
           className="btn-primary flex items-center gap-3 px-12 py-5 text-xl font-bold group relative disabled:opacity-50"
         >
+
 
           {isAnalyzing ? (
             <>

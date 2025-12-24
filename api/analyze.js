@@ -5,7 +5,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { fridgeImages = [], pantryImages = [], dietaryPreferences } = req.body;
+  const { kitchenImages = [], dietaryPreferences } = req.body;
   const apiKey = process.env.GEMINI_API_KEY;
 
   if (!apiKey || apiKey === "your_api_key_here") {
@@ -26,8 +26,8 @@ export default async function handler(req, res) {
 
     const prompt = `
       You are Chef AI, a friendly and expert culinary assistant.
-      Analyze the provided images of a fridge and pantry to identify ingredients.
-      Multiple images may be provided to show different angles or deeper shelves.
+      Analyze the provided images of a kitchen (which may include the fridge, pantry, spice rack, freezer, or counters) to identify ingredients.
+      Multiple images have been provided to show different areas and angles. Scan them all carefully.
       Suggest 3-5 creative recipes that can be made primarily with these ingredients.
       
       Dietary Preferences: ${dietaryPreferences?.join(", ") || "None"}
@@ -68,19 +68,14 @@ export default async function handler(req, res) {
 
     const parts = [
       { text: prompt },
-      ...fridgeImages.map(img => ({ 
-        inlineData: { 
-          data: img.split(',')[1], 
-          mimeType: img.split(';')[0].split(':')[1] || "image/jpeg" 
-        } 
-      })),
-      ...pantryImages.map(img => ({ 
+      ...kitchenImages.map(img => ({ 
         inlineData: { 
           data: img.split(',')[1], 
           mimeType: img.split(';')[0].split(':')[1] || "image/jpeg" 
         } 
       })),
     ];
+
 
 
     const result = await model.generateContent(parts);

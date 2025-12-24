@@ -10,8 +10,7 @@ export const AppProvider = ({ children }) => {
     const saved = localStorage.getItem('shoppingList');
     return saved ? JSON.parse(saved) : [];
   });
-  const [fridgeImages, setFridgeImages] = useState([]);
-  const [pantryImages, setPantryImages] = useState([]);
+  const [kitchenImages, setKitchenImages] = useState([]);
   const [favorites, setFavorites] = useState(() => {
     const saved = localStorage.getItem('favorites');
     return saved ? JSON.parse(saved) : [];
@@ -41,29 +40,18 @@ export const AppProvider = ({ children }) => {
     });
   };
 
-  const addImage = (category, imageData) => {
-    if (category === 'Fridge') {
-      setFridgeImages(prev => [...prev, imageData]);
-    } else {
-      setPantryImages(prev => [...prev, imageData]);
-    }
+  const addImage = (imageData) => {
+    setKitchenImages(prev => [...prev, imageData]);
   };
 
-  const removeImage = (category, index) => {
-    if (category === 'Fridge') {
-      setFridgeImages(prev => prev.filter((_, i) => i !== index));
-    } else {
-      setPantryImages(prev => prev.filter((_, i) => i !== index));
-    }
+  const removeImage = (index) => {
+    setKitchenImages(prev => prev.filter((_, i) => i !== index));
   };
 
-  const clearImages = (category) => {
-    if (category === 'Fridge') {
-      setFridgeImages([]);
-    } else {
-      setPantryImages([]);
-    }
+  const clearImages = () => {
+    setKitchenImages([]);
   };
+
 
 
   useEffect(() => {
@@ -164,7 +152,7 @@ export const AppProvider = ({ children }) => {
       recipes, setRecipes,
       favorites, toggleFavorite,
       shoppingList, addToShoppingList, removeFromShoppingList, toggleShoppingListItem, clearCompleted,
-      fridgeImages, pantryImages, addImage, removeImage, clearImages,
+      kitchenImages, addImage, removeImage, clearImages,
       isAnalyzing, setIsAnalyzing,
       activeRecipe, setActiveRecipe,
       isSyncing, syncStatus,
@@ -174,6 +162,7 @@ export const AppProvider = ({ children }) => {
     }}>
       {children}
     </AppContext.Provider>
+
 
 
   );

@@ -1,6 +1,6 @@
 import { MOCK_RECIPES } from "./mockData";
 
-export const analyzeIngredients = async (fridgeImages, pantryImages, dietaryPreferences) => {
+export const analyzeIngredients = async (kitchenImages, dietaryPreferences) => {
   try {
     const response = await fetch('/api/analyze', {
       method: 'POST',
@@ -8,11 +8,11 @@ export const analyzeIngredients = async (fridgeImages, pantryImages, dietaryPref
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        fridgeImages,
-        pantryImages,
+        kitchenImages,
         dietaryPreferences,
       }),
     });
+
 
 
     if (!response.ok) {
