@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { ourGroceriesService } from '../services/ourGroceries';
 
 const AppContext = createContext();
 
@@ -13,16 +14,36 @@ export const AppProvider = ({ children }) => {
   const [pantryImage, setPantryImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeRecipe, setActiveRecipe] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncStatus, setSyncStatus] = useState(null);
 
   useEffect(() => {
     localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
   }, [shoppingList]);
 
-  const addToShoppingList = (item) => {
+  const addToShoppingList = async (item) => {
+    // Add to local list immediately for UI responsiveness
     setShoppingList(prev => {
       if (prev.find(i => i.name === item.name)) return prev;
-      return [...prev, { ...item, id: Date.now(), completed: false }];
+      return [...prev, { ...item, id: Date.now(), completed: false, synced: false }];
     });
+
+    // Try to sync with OurGroceries
+    setIsSyncing(true);
+    try {
+      await ourGroceriesService.addItem(item.name);
+      setShoppingList(prev => prev.map(i => 
+        i.name === item.name ? { ...i, synced: true } : i
+      ));
+      setSyncStatus(`Added ${item.name} to OurGroceries!`);
+      setTimeout(() => setSyncStatus(null), 3000);
+    } catch (error) {
+      console.error('Failed to sync with OurGroceries:', error);
+      setSyncStatus('Failed to sync with OurGroceries. Check settings.');
+      setTimeout(() => setSyncStatus(null), 5000);
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   const removeFromShoppingList = (id) => {
@@ -45,7 +66,8 @@ export const AppProvider = ({ children }) => {
       fridgeImage, setFridgeImage,
       pantryImage, setPantryImage,
       isAnalyzing, setIsAnalyzing,
-      activeRecipe, setActiveRecipe
+      activeRecipe, setActiveRecipe,
+      isSyncing, syncStatus
     }}>
       {children}
     </AppContext.Provider>
