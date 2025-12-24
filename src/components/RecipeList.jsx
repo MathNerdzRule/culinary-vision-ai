@@ -83,42 +83,20 @@ export const RecipeCard = ({ recipe }) => {
       </div>
       
       <div className="bg-charcoal-50 dark:bg-white/5 px-6 py-3 flex justify-between items-center border-t border-charcoal-200 dark:border-white/5">
-        <div 
-          onClick={() => handleSelect('ingredients')}
-          className="flex -space-x-2 cursor-pointer hover:translate-x-1 transition-transform"
+        <button 
+          onClick={() => handleSelect('details')}
+          className="text-[10px] font-bold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest hover:text-sage-500 transition-colors"
         >
-          {recipe.ingredients.slice(0, 3).map((ing, i) => (
-            <div 
-              key={i} 
-              title={ing.name}
-              className={`w-6 h-6 rounded-full border border-white dark:border-charcoal-900 flex items-center justify-center text-[10px] font-bold shadow-sm ${
-              ing.isAvailable ? 'bg-sage-500 text-white' : 'bg-charcoal-200 dark:bg-charcoal-700 text-charcoal-500 dark:text-charcoal-400'
-            }`}>
-              {ing.name[0].toUpperCase()}
-            </div>
-          ))}
-          {recipe.ingredients.length > 3 && (
-            <div className="w-6 h-6 rounded-full border border-white dark:border-charcoal-900 bg-charcoal-100 dark:bg-charcoal-800 flex items-center justify-center text-[10px] font-bold text-charcoal-500 dark:text-charcoal-400 shadow-sm">
-              +{recipe.ingredients.length - 3}
-            </div>
-          )}
-        </div>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={() => handleSelect('details')}
-            className="text-[10px] font-bold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest hover:text-sage-500 transition-colors"
-          >
-            Details
-          </button>
-          <div className="w-[1px] h-3 bg-charcoal-200 dark:bg-white/10" />
-          <button 
-            onClick={() => handleSelect('cooking')}
-            className="text-[10px] font-black text-sage-600 dark:text-sage-400 uppercase tracking-widest hover:text-sage-500 transition-colors flex items-center gap-1"
-          >
-            Let's Cook
-            <ChevronRight size={12} />
-          </button>
-        </div>
+          View Details
+        </button>
+        
+        <button 
+          onClick={() => handleSelect('cooking')}
+          className="text-[10px] font-black text-sage-600 dark:text-sage-400 uppercase tracking-widest hover:text-sage-500 transition-colors flex items-center gap-1 group/btn"
+        >
+          Let's Cook
+          <ChevronRight size={12} className="group-hover/btn:translate-x-0.5 transition-transform" />
+        </button>
       </div>
     </motion.div>
   );

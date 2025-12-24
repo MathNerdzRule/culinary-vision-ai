@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Volume2, ShoppingCart, CheckCircle2, AlertCircle } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Volume2, ShoppingCart, CheckCircle2, AlertCircle, Clock, Flame } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 export const CookingMode = ({ recipe, onClose }) => {
@@ -122,7 +122,7 @@ export const CookingMode = ({ recipe, onClose }) => {
                    <button 
                     key={i}
                     onClick={() => addToShoppingList(ing)}
-                    className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-charcoal-900 border border-charcoal-200 dark:border-white/10 rounded-lg text-xs hover:border-amber-500/50 transition-all"
+                    className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-charcoal-900 border border-charcoal-200 dark:border-white/10 rounded-lg text-xs hover:border-amber-500/50 transition-all font-bold"
                    >
                      {ing.name}
                      <ShoppingCart size={12} className="text-charcoal-400" />
@@ -147,7 +147,7 @@ export const CookingMode = ({ recipe, onClose }) => {
   );
 
   const renderIngredients = () => (
-    <div className="flex-1 overflow-y-auto p-6 md:p-12 max-w-2xl mx-auto w-full space-y-8">
+    <div className="flex-1 overflow-y-auto p-6 md:p-12 max-w-2xl mx-auto w-full space-y-8 pb-32">
        <div className="text-center space-y-2">
           <h3 className="text-sm font-bold text-sage-500 uppercase tracking-[0.3em]">Ingredient Checklist</h3>
           <p className="text-charcoal-500 dark:text-charcoal-400">Tap missing items to add to your shopping list</p>
@@ -196,7 +196,7 @@ export const CookingMode = ({ recipe, onClose }) => {
             );
           })}
        </div>
-       <div className="flex flex-col items-center gap-6 pt-8 pb-20">
+       <div className="flex flex-col items-center gap-6 pt-8">
           <button 
             onClick={() => setRecipeViewMode('cooking')}
             className="btn-primary px-10 py-4 shadow-xl shadow-sage-500/20 flex items-center gap-2"
@@ -206,8 +206,9 @@ export const CookingMode = ({ recipe, onClose }) => {
           </button>
           <button 
             onClick={() => setRecipeViewMode('details')}
-            className="text-charcoal-400 hover:text-charcoal-900 dark:hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
+            className="text-charcoal-400 hover:text-charcoal-900 dark:hover:text-white transition-all text-sm font-bold uppercase tracking-widest flex items-center gap-2 group"
           >
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
             Back to Overview
           </button>
        </div>
@@ -216,7 +217,7 @@ export const CookingMode = ({ recipe, onClose }) => {
 
   const renderCooking = () => (
     <div className="flex-1 overflow-hidden grid grid-cols-1 lg:grid-cols-3">
-      {/* Step Text */}
+      {/* ... (renderCooking logic remains same) ... */}
       <div className="lg:col-span-2 p-8 md:p-16 flex flex-col justify-center">
         <AnimatePresence mode="wait">
           <motion.div
@@ -273,32 +274,6 @@ export const CookingMode = ({ recipe, onClose }) => {
             ))}
           </div>
         </div>
-
-        {missingIngredients.length > 0 && (
-          <div className="glass-card bg-amber-500/5 dark:bg-amber-500/5 border-amber-500/20 p-6 shadow-none">
-            <div className="flex items-center gap-3 text-amber-600 dark:text-amber-500 mb-4">
-              <AlertCircle size={20} />
-              <h4 className="font-bold">Missing</h4>
-            </div>
-            <div className="space-y-2">
-              {missingIngredients.map((ing, i) => (
-                <button
-                  key={i}
-                  onClick={() => addToShoppingList(ing)}
-                  disabled={shoppingList.some(s => s.name === ing.name)}
-                  className="w-full flex items-center justify-between p-3 rounded-xl bg-white dark:bg-charcoal-900 border border-charcoal-200 dark:border-white/5 hover:border-amber-500/30 transition-all text-left"
-                >
-                  <span className="text-sm text-charcoal-700 dark:text-charcoal-200">{ing.name}</span>
-                  {shoppingList.some(s => s.name === ing.name) ? (
-                    <CheckCircle2 size={16} className="text-sage-500" />
-                  ) : (
-                    <ShoppingCart size={16} className="text-charcoal-400 hover:text-amber-500" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
@@ -316,11 +291,12 @@ export const CookingMode = ({ recipe, onClose }) => {
           <button 
             onClick={() => {
               if (recipeViewMode === 'cooking') setRecipeViewMode('details');
+              else if (recipeViewMode === 'ingredients') setRecipeViewMode('details');
               else onClose();
             }} 
-            className="p-2 hover:bg-charcoal-100 dark:hover:bg-white/5 rounded-full text-charcoal-500 dark:text-charcoal-400"
+            className="p-2 hover:bg-charcoal-100 dark:hover:bg-white/5 rounded-full text-charcoal-500 dark:text-charcoal-400 transition-colors"
           >
-            {recipeViewMode === 'cooking' ? <ChevronLeft size={24} /> : <X size={24} />}
+            {(recipeViewMode === 'cooking' || recipeViewMode === 'ingredients') ? <ChevronLeft size={24} /> : <X size={24} />}
           </button>
           <div>
             <h2 className="text-xl font-bold text-charcoal-900 dark:text-white capitalize">{recipe.name}</h2>
@@ -338,14 +314,6 @@ export const CookingMode = ({ recipe, onClose }) => {
             >
               <Volume2 size={24} />
             </button>
-          )}
-          {recipeViewMode !== 'cooking' && (
-             <button 
-              onClick={onClose}
-              className="px-4 py-2 text-sm font-bold text-charcoal-500 hover:text-charcoal-900 dark:hover:text-white transition-colors"
-             >
-               Close
-             </button>
           )}
         </div>
       </div>
