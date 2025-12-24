@@ -60,9 +60,9 @@ export const CameraSystem = ({ label, image, onImageCapture, onImageClear }) => 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-charcoal-400 uppercase tracking-widest">{label}</h3>
+        <h3 className="text-sm font-semibold text-charcoal-500 dark:text-charcoal-400 uppercase tracking-widest">{label}</h3>
         {image && (
-          <button onClick={onImageClear} className="text-charcoal-500 hover:text-red-400 transition-colors">
+          <button onClick={onImageClear} className="text-charcoal-400 dark:text-charcoal-500 hover:text-red-500 transition-colors">
             <X size={18} />
           </button>
         )}
@@ -114,19 +114,19 @@ export const CameraSystem = ({ label, image, onImageCapture, onImageClear }) => 
               exit={{ opacity: 0 }}
               className="flex flex-col items-center gap-4 p-8 text-center"
             >
-              <div className="w-16 h-16 rounded-3xl bg-sage-500/10 flex items-center justify-center text-sage-400 mb-2">
+              <div className="w-16 h-16 rounded-3xl bg-sage-500/10 flex items-center justify-center text-sage-500 dark:text-sage-400 mb-2">
                 <Camera size={28} />
               </div>
               <div>
-                <p className="text-white font-medium mb-1">Capture {label}</p>
-                <p className="text-xs text-charcoal-400">Take a photo of your {label.toLowerCase()} contents</p>
+                <p className="text-charcoal-900 dark:text-white font-medium mb-1">Capture {label}</p>
+                <p className="text-xs text-charcoal-500 dark:text-charcoal-400">Take a photo of your {label.toLowerCase()} contents</p>
               </div>
               <div className="flex gap-3 mt-2">
-                <button onClick={startCamera} className="btn-primary flex items-center gap-2 py-2">
+                <button onClick={startCamera} className="btn-primary flex items-center gap-2 py-2 text-sm">
                   <Camera size={18} />
                   <span>Camera</span>
                 </button>
-                <label className="btn-secondary flex items-center gap-2 py-2 cursor-pointer">
+                <label className="btn-secondary flex items-center gap-2 py-2 cursor-pointer text-sm">
                   <Upload size={18} />
                   <span>Upload</span>
                   <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
@@ -135,6 +135,7 @@ export const CameraSystem = ({ label, image, onImageCapture, onImageClear }) => 
             </motion.div>
           )}
         </AnimatePresence>
+
         <canvas ref={canvasRef} className="hidden" />
       </div>
     </div>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useAppContext } from '../context/AppContext';
 import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 const DIETARY_OPTIONS = [
   { id: 'Vegan', label: 'Vegan', icon: Leaf },
@@ -41,13 +42,13 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
         )}
       </AnimatePresence>
 
-      <aside className={`fixed left-0 top-0 h-screen w-64 bg-charcoal-900 border-r border-white/5 p-6 flex flex-col z-[70] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-charcoal-900 border-r border-charcoal-200 dark:border-white/5 p-6 flex flex-col z-[70] transition-transform duration-300 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-sage-500 rounded-xl flex items-center justify-center shadow-lg shadow-sage-500/20">
               <ChefHat className="text-white w-6 h-6" />
             </div>
-            <h1 className="text-xl font-bold bg-gradient-to-br from-white to-charcoal-400 bg-clip-text text-transparent">
+            <h1 className="text-xl font-bold bg-gradient-to-br from-charcoal-900 to-charcoal-500 dark:from-white dark:to-charcoal-400 bg-clip-text text-transparent">
               Culinary Vision
             </h1>
           </div>
@@ -66,8 +67,8 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                 activeTab === item.id 
-                  ? 'bg-sage-500/10 text-sage-400 border border-sage-500/20' 
-                  : 'text-charcoal-400 hover:bg-white/5 hover:text-white'
+                  ? 'bg-sage-500/10 text-sage-600 dark:text-sage-400 border border-sage-500/20' 
+                  : 'text-charcoal-500 dark:text-charcoal-400 hover:bg-charcoal-50 dark:hover:bg-white/5 hover:text-charcoal-900 dark:hover:text-white'
               }`}
             >
               <item.icon size={20} />
@@ -76,8 +77,8 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
           ))}
         </nav>
 
-        <div className="mt-auto">
-          <h2 className="text-xs font-semibold text-charcoal-500 uppercase tracking-wider mb-4 px-4">
+        <div className="mb-10">
+          <h2 className="text-xs font-semibold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider mb-4 px-4">
             Dietary Preferences
           </h2>
           <div className="space-y-1">
@@ -87,8 +88,8 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
                 onClick={() => togglePreference(option.id)}
                 className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
                   dietaryPreferences.includes(option.id)
-                    ? 'bg-sage-500/10 text-sage-400 border border-sage-500/20'
-                    : 'text-charcoal-400 hover:bg-white/5'
+                    ? 'bg-sage-500/10 text-sage-600 dark:text-sage-400 border border-sage-500/20'
+                    : 'text-charcoal-500 dark:text-charcoal-400 hover:bg-charcoal-50 dark:hover:bg-white/5'
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -102,7 +103,15 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
             ))}
           </div>
         </div>
+
+        <div className="mt-auto pt-6 border-t border-charcoal-100 dark:border-white/5">
+          <div className="flex items-center justify-between mb-4 px-4">
+             <span className="text-xs font-semibold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider">Appearance</span>
+          </div>
+          <ThemeSwitcher />
+        </div>
       </aside>
     </>
   );
 };
+

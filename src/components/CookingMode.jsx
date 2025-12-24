@@ -44,24 +44,24 @@ export const CookingMode = ({ recipe, onClose }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-charcoal-950 flex flex-col"
+      className="fixed inset-0 z-50 bg-slate-50 dark:bg-charcoal-950 flex flex-col transition-colors duration-300"
     >
       {/* Header */}
-      <div className="p-6 flex justify-between items-center border-b border-white/5 bg-charcoal-900/50 backdrop-blur-xl">
+      <div className="p-6 flex justify-between items-center border-b border-charcoal-200 dark:border-white/5 bg-white/70 dark:bg-charcoal-900/50 backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full text-charcoal-400">
+          <button onClick={onClose} className="p-2 hover:bg-charcoal-100 dark:hover:bg-white/5 rounded-full text-charcoal-500 dark:text-charcoal-400">
             <X size={24} />
           </button>
           <div>
-            <h2 className="text-xl font-bold text-white">{recipe.name}</h2>
-            <p className="text-sm text-charcoal-400">Step {currentStep + 1} of {recipe.instructions.length}</p>
+            <h2 className="text-xl font-bold text-charcoal-900 dark:text-white">{recipe.name}</h2>
+            <p className="text-sm text-charcoal-500 dark:text-charcoal-400">Step {currentStep + 1} of {recipe.instructions.length}</p>
           </div>
         </div>
         
         <div className="flex items-center gap-2">
           <button 
             onClick={() => speak(recipe.instructions[currentStep])}
-            className={`p-3 rounded-xl transition-all ${isSpeaking ? 'bg-sage-500 text-white' : 'bg-charcoal-800 text-charcoal-300'}`}
+            className={`p-3 rounded-xl transition-all ${isSpeaking ? 'bg-sage-500 text-white' : 'bg-charcoal-100 dark:bg-charcoal-800 text-charcoal-600 dark:text-charcoal-300'}`}
           >
             <Volume2 size={24} />
           </button>
@@ -69,7 +69,7 @@ export const CookingMode = ({ recipe, onClose }) => {
       </div>
 
       {/* Progress Bar */}
-      <div className="h-1.5 w-full bg-charcoal-900 overflow-hidden">
+      <div className="h-1.5 w-full bg-charcoal-100 dark:bg-charcoal-900 overflow-hidden">
         <motion.div 
           className="h-full bg-sage-500 shadow-[0_0_15px_rgba(76,175,80,0.5)]"
           initial={{ width: 0 }}
@@ -91,7 +91,7 @@ export const CookingMode = ({ recipe, onClose }) => {
               className="max-w-3xl"
             >
               <span className="text-sage-500 font-bold uppercase tracking-[0.2em] text-sm mb-6 block">Instruction</span>
-              <h3 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-8">
+              <h3 className="text-3xl md:text-5xl font-bold text-charcoal-900 dark:text-white leading-tight mb-8">
                 {recipe.instructions[currentStep]}
               </h3>
             </motion.div>
@@ -118,33 +118,33 @@ export const CookingMode = ({ recipe, onClose }) => {
         </div>
 
         {/* Sidebar Info */}
-        <div className="bg-charcoal-900/30 border-l border-white/5 p-8 overflow-y-auto hidden lg:block">
+        <div className="bg-charcoal-50/50 dark:bg-charcoal-900/30 lg:border-l border-charcoal-200 dark:border-white/5 p-8 overflow-y-auto hidden lg:block">
           <div className="mb-10">
-            <h4 className="text-sm font-bold text-charcoal-400 uppercase tracking-widest mb-6 border-b border-white/5 pb-2">
+            <h4 className="text-sm font-bold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest mb-6 border-b border-charcoal-200 dark:border-white/5 pb-2">
               Ingredients for this step
             </h4>
             <div className="space-y-4">
               {recipe.ingredients.map((ing, i) => (
                 <div key={i} className="flex items-center justify-between group">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${ing.isAvailable ? 'bg-sage-500' : 'bg-charcoal-600'}`} />
-                    <span className={ing.isAvailable ? 'text-charcoal-200' : 'text-charcoal-500'}>
+                    <div className={`w-2 h-2 rounded-full ${ing.isAvailable ? 'bg-sage-500' : 'bg-charcoal-300 dark:bg-charcoal-600'}`} />
+                    <span className={ing.isAvailable ? 'text-charcoal-700 dark:text-charcoal-200' : 'text-charcoal-400 dark:text-charcoal-500'}>
                       {ing.name}
                     </span>
                   </div>
-                  <span className="text-xs text-charcoal-500 font-medium">{ing.amount}</span>
+                  <span className="text-xs text-charcoal-400 dark:text-charcoal-500 font-medium">{ing.amount}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {missingIngredients.length > 0 && (
-            <div className="glass-card bg-amber-500/5 border-amber-500/20 p-6">
-              <div className="flex items-center gap-3 text-amber-500 mb-4">
+            <div className="glass-card bg-amber-500/5 dark:bg-amber-500/5 border-amber-500/20 p-6 shadow-none">
+              <div className="flex items-center gap-3 text-amber-600 dark:text-amber-500 mb-4">
                 <AlertCircle size={20} />
                 <h4 className="font-bold">Missing Ingredients</h4>
               </div>
-              <p className="text-xs text-amber-500/70 mb-4">
+              <p className="text-xs text-amber-600/70 dark:text-amber-500/70 mb-4">
                 You might not have these in your kitchen. Add them to your shopping list?
               </p>
               <div className="space-y-2">
@@ -153,9 +153,9 @@ export const CookingMode = ({ recipe, onClose }) => {
                     key={i}
                     onClick={() => addToShoppingList(ing)}
                     disabled={shoppingList.some(s => s.name === ing.name)}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-charcoal-900 border border-white/5 hover:border-amber-500/30 transition-all text-left"
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-white dark:bg-charcoal-900 border border-charcoal-200 dark:border-white/5 hover:border-amber-500/30 transition-all text-left"
                   >
-                    <span className="text-sm text-charcoal-200">{ing.name}</span>
+                    <span className="text-sm text-charcoal-700 dark:text-charcoal-200">{ing.name}</span>
                     {shoppingList.some(s => s.name === ing.name) ? (
                       <CheckCircle2 size={16} className="text-sage-500" />
                     ) : (
@@ -169,5 +169,6 @@ export const CookingMode = ({ recipe, onClose }) => {
         </div>
       </div>
     </motion.div>
+
   );
 };

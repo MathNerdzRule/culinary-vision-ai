@@ -4,7 +4,20 @@
 
 @layer base {
   body {
-    @apply bg-charcoal-950 text-charcoal-100 min-h-screen font-sans;
+    @apply bg-slate-50 text-charcoal-900 dark:bg-charcoal-950 dark:text-charcoal-100 min-h-screen font-sans transition-colors duration-300;
+    background-image: radial-gradient(
+        at 0% 0%,
+        rgba(76, 175, 80, 0.05) 0px,
+        transparent 50%
+      ),
+      radial-gradient(
+        at 100% 100%,
+        rgba(255, 191, 0, 0.03) 0px,
+        transparent 50%
+      );
+  }
+
+  .dark body {
     background-image: radial-gradient(
         at 0% 0%,
         rgba(76, 175, 80, 0.1) 0px,
@@ -20,7 +33,7 @@
 
 @layer components {
   .glass-card {
-    @apply bg-charcoal-900/40 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl;
+    @apply bg-white/70 dark:bg-charcoal-900/40 backdrop-blur-md border border-charcoal-200 dark:border-white/10 rounded-2xl shadow-xl transition-all duration-300;
   }
 
   .glass-button {
@@ -32,15 +45,15 @@
   }
 
   .btn-secondary {
-    @apply glass-button bg-charcoal-800 hover:bg-charcoal-700 text-charcoal-100 px-6 py-2.5 rounded-xl font-medium border border-white/5;
+    @apply glass-button bg-charcoal-100 dark:bg-charcoal-800 hover:bg-charcoal-200 dark:hover:bg-charcoal-700 text-charcoal-900 dark:text-charcoal-100 px-6 py-2.5 rounded-xl font-medium border border-charcoal-200 dark:border-white/5;
   }
 
   .btn-outline {
-    @apply glass-button bg-transparent border border-sage-500/50 hover:bg-sage-500/10 text-sage-400 px-6 py-2.5 rounded-xl font-medium;
+    @apply glass-button bg-transparent border border-sage-500/50 hover:bg-sage-500/10 text-sage-600 dark:text-sage-400 px-6 py-2.5 rounded-xl font-medium;
   }
 
   .input-field {
-    @apply bg-charcoal-900/50 border border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sage-500/50 transition-all text-white placeholder-charcoal-400;
+    @apply bg-white dark:bg-charcoal-900/50 border border-charcoal-200 dark:border-white/10 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-sage-500/50 transition-all text-charcoal-900 dark:text-white placeholder-charcoal-400;
   }
 }
 
@@ -50,9 +63,9 @@
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-charcoal-950;
+  @apply bg-slate-50 dark:bg-charcoal-950;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-charcoal-800 rounded-full hover:bg-charcoal-700 transition-colors;
+  @apply bg-charcoal-200 dark:bg-charcoal-800 rounded-full hover:bg-charcoal-300 dark:hover:bg-charcoal-700 transition-colors;
 }
