@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Camera, Upload, X, Check, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -8,19 +8,28 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
   const canvasRef = useRef(null);
   const [stream, setStream] = useState(null);
 
+  // Effect to attach stream to video element when it mounts
+  useEffect(() => {
+    if (isCameraOpen && stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [isCameraOpen, stream]);
+
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ 
-        video: { facingMode: 'environment' } 
+        video: { 
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false 
       });
       setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
       setIsCameraOpen(true);
     } catch (err) {
       console.error("Error accessing camera:", err);
-      alert("Could not access camera. Please check permissions.");
+      alert("Could not access camera. Please check permissions and ensure you are on HTTPS.");
     }
   };
 
@@ -36,13 +45,29 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
     if (videoRef.current && canvasRef.current) {
       const video = videoRef.current;
       const canvas = canvasRef.current;
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      
+      // Ensure we have valid dimensions
+      const width = video.videoWidth || video.width || 640;
+      const height = video.videoHeight || video.height || 480;
+      
+      canvas.width = width;
+      canvas.height = height;
+      
       const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      const dataUrl = canvas.toDataURL('image/jpeg');
-      onAdd(dataUrl);
-      stopCamera();
+      ctx.drawImage(video, 0, 0, width, height);
+      
+      try {
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        if (dataUrl && dataUrl !== 'data:,') {
+          onAdd(dataUrl);
+          stopCamera();
+        } else {
+          throw new Error("Invalid image captured");
+        }
+      } catch (err) {
+        console.error("Capture failed:", err);
+        alert("Failed to capture photo. Please try again.");
+      }
     }
   };
 
@@ -68,22 +93,24 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
         )}
       </div>
 
-      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden glass-card flex flex-col group">
+      <div className="relative aspect-[4/3] rounded-2xl overflow-hidden glass-card flex flex-col bg-charcoal-50 dark:bg-charcoal-900/20">
         <AnimatePresence mode="wait">
           {isCameraOpen ? (
             <motion.div
+              key="camera"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full relative z-10"
+              className="w-full h-full relative z-10 bg-black"
             >
               <video
                 ref={videoRef}
                 autoPlay
                 playsInline
+                muted
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4">
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-4 z-20">
                 <button
                   onClick={capturePhoto}
                   className="w-16 h-16 rounded-full bg-white border-4 border-sage-500 shadow-xl flex items-center justify-center active:scale-90 transition-transform"
@@ -100,25 +127,26 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
             </motion.div>
           ) : images.length > 0 ? (
             <motion.div 
+              key="gallery"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="w-full h-full p-4 overflow-y-auto no-scrollbar grid grid-cols-2 gap-3"
+              className="w-full h-full p-4 overflow-y-auto no-scrollbar grid grid-cols-2 gap-3 content-start"
             >
               {images.map((img, idx) => (
-                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group/img shadow-md">
-                  <img src={img} className="w-full h-full object-cover" alt={`${label} capture ${idx}`} />
+                <div key={idx} className="relative aspect-square rounded-xl overflow-hidden group shadow-sm bg-charcoal-100 dark:bg-white/5 border border-charcoal-200 dark:border-white/10">
+                  <img src={img} className="w-full h-full object-cover" alt={`${label} ${idx}`} />
                   <button 
                     onClick={() => onRemove(idx)}
-                    className="absolute top-1 right-1 p-1.5 bg-red-500 text-white rounded-lg opacity-0 group-hover/img:opacity-100 transition-opacity"
+                    className="absolute top-1 right-1 p-1.5 bg-red-500 text-white rounded-lg opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity z-10"
                   >
-                    <X size={14} />
+                    <X size={12} />
                   </button>
                 </div>
               ))}
               <button 
                 onClick={startCamera}
-                className="aspect-square rounded-xl border-2 border-dashed border-charcoal-200 dark:border-charcoal-700 flex flex-col items-center justify-center gap-2 text-charcoal-400 dark:text-charcoal-500 hover:border-sage-500 hover:text-sage-500 transition-all"
+                className="aspect-square rounded-xl border-2 border-dashed border-charcoal-300 dark:border-charcoal-700 flex flex-col items-center justify-center gap-2 text-charcoal-400 dark:text-charcoal-500 hover:border-sage-500 hover:text-sage-500 transition-all bg-white/50 dark:bg-transparent"
               >
                 <div className="w-10 h-10 rounded-full bg-charcoal-100 dark:bg-charcoal-800 flex items-center justify-center">
                   <Camera size={20} />
@@ -128,6 +156,7 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
             </motion.div>
           ) : (
             <motion.div
+              key="empty"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -136,17 +165,17 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
               <div className="w-16 h-16 rounded-3xl bg-sage-500/10 flex items-center justify-center text-sage-500 dark:text-sage-400 mb-2">
                 <Camera size={28} />
               </div>
-              <div>
-                <p className="text-charcoal-900 dark:text-white font-medium mb-1">Capture {label}</p>
-                <p className="text-xs text-charcoal-500 dark:text-charcoal-400">Take multiple photos to show everything</p>
+              <div className="space-y-1">
+                <p className="text-charcoal-900 dark:text-white font-bold tracking-tight">Capture {label}</p>
+                <p className="text-xs text-charcoal-500 dark:text-charcoal-400 max-w-[200px]">Take multiple photos to show all your items</p>
               </div>
               <div className="flex gap-3 mt-2">
-                <button onClick={startCamera} className="btn-primary flex items-center gap-2 py-2 text-sm">
-                  <Camera size={18} />
+                <button onClick={startCamera} className="btn-primary flex items-center gap-2 py-2 px-4 text-xs">
+                  <Camera size={16} />
                   <span>Camera</span>
                 </button>
-                <label className="btn-secondary flex items-center gap-2 py-2 cursor-pointer text-sm">
-                  <Upload size={18} />
+                <label className="btn-secondary flex items-center gap-2 py-2 px-4 cursor-pointer text-xs">
+                  <Upload size={16} />
                   <span>Upload</span>
                   <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
                 </label>
@@ -154,7 +183,6 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
             </motion.div>
           )}
         </AnimatePresence>
-
 
         <canvas ref={canvasRef} className="hidden" />
       </div>
