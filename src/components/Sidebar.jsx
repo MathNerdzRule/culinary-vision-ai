@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X, AlertCircle } from 'lucide-react';
+import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X, AlertCircle, Cloud } from 'lucide-react';
+
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThemeSwitcher } from './ThemeSwitcher';
@@ -8,7 +9,8 @@ import { ThemeSwitcher } from './ThemeSwitcher';
 const DIETARY_OPTIONS = [
   { id: 'Vegan', label: 'Vegan', icon: Leaf },
   { id: 'Vegetarian', label: 'Vegetarian', icon: Carrot },
-  { id: 'GP', label: 'Gastroparesis (GP)', icon: AlertCircle },
+  { id: 'GP', label: 'Gastroparesis', icon: AlertCircle },
+
   { id: 'Keto', label: 'Keto', icon: Flame },
   { id: 'Gluten-Free', label: 'Gluten-Free', icon: WheatOff },
   { id: 'Dairy-Free', label: 'Dairy-Free', icon: MilkOff },
@@ -16,7 +18,13 @@ const DIETARY_OPTIONS = [
 ];
 
 export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
-  const { dietaryPreferences, setDietaryPreferences } = useAppContext();
+  const { 
+    dietaryPreferences, 
+    setDietaryPreferences, 
+    ourGroceriesLists, 
+    selectedListId, 
+    setSelectedListId 
+  } = useAppContext();
 
   const togglePreference = (id) => {
     setDietaryPreferences(prev => 
@@ -80,31 +88,60 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
           ))}
         </nav>
 
-        <div className="mb-10">
-          <h2 className="text-xs font-semibold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider mb-4 px-4">
-            Dietary Preferences
-          </h2>
-          <div className="space-y-1">
-            {DIETARY_OPTIONS.map((option) => (
-              <button
-                key={option.id}
-                onClick={() => togglePreference(option.id)}
-                className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
-                  dietaryPreferences.includes(option.id)
-                    ? 'bg-sage-500/10 text-sage-600 dark:text-sage-400 border border-sage-500/20'
-                    : 'text-charcoal-500 dark:text-charcoal-400 hover:bg-charcoal-50 dark:hover:bg-white/5'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <option.icon size={18} />
-                  <span className="text-sm font-medium">{option.label}</span>
-                </div>
-                {dietaryPreferences.includes(option.id) && (
-                  <div className="w-1.5 h-1.5 rounded-full bg-sage-500 shadow-[0_0_8px_rgba(76,175,80,0.8)]" />
-                )}
-              </button>
-            ))}
+        <div className="flex-1 overflow-y-auto no-scrollbar space-y-10">
+          <div>
+            <h2 className="text-xs font-semibold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider mb-4 px-4">
+              Dietary Preferences
+            </h2>
+            <div className="space-y-1">
+              {DIETARY_OPTIONS.map((option) => (
+                <button
+                  key={option.id}
+                  onClick={() => togglePreference(option.id)}
+                  className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl transition-all ${
+                    dietaryPreferences.includes(option.id)
+                      ? 'bg-sage-500/10 text-sage-600 dark:text-sage-400 border border-sage-500/20'
+                      : 'text-charcoal-500 dark:text-charcoal-400 hover:bg-charcoal-50 dark:hover:bg-white/5'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <option.icon size={18} />
+                    <span className="text-sm font-medium">{option.label}</span>
+                  </div>
+                  {dietaryPreferences.includes(option.id) && (
+                    <div className="w-1.5 h-1.5 rounded-full bg-sage-500 shadow-[0_0_8px_rgba(76,175,80,0.8)]" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
+
+          {ourGroceriesLists.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 px-4 mb-4">
+                <Cloud size={14} className="text-sage-500" />
+                <h2 className="text-xs font-semibold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider">
+                  Sync Destination
+                </h2>
+              </div>
+              <div className="px-4">
+                <select
+                  value={selectedListId || ''}
+                  onChange={(e) => setSelectedListId(e.target.value)}
+                  className="w-full bg-charcoal-50 dark:bg-charcoal-800 border-none rounded-xl text-sm p-3 text-charcoal-700 dark:text-white focus:ring-2 focus:ring-sage-500/50 outline-none cursor-pointer appearance-none transition-all"
+                >
+                  {ourGroceriesLists.map((list) => (
+                    <option key={list.id} value={list.id}>
+                      {list.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-charcoal-400 dark:text-charcoal-500 mt-2">
+                  Syncing to: <span className="text-sage-500">{ourGroceriesLists.find(l => l.id === selectedListId)?.name}</span>
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="mt-auto pt-6 border-t border-charcoal-100 dark:border-white/5">
@@ -114,6 +151,7 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
           <ThemeSwitcher />
         </div>
       </aside>
+
     </>
   );
 };

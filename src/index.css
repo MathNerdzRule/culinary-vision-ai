@@ -69,3 +69,12 @@
 ::-webkit-scrollbar-thumb {
   @apply bg-charcoal-200 dark:bg-charcoal-800 rounded-full hover:bg-charcoal-300 dark:hover:bg-charcoal-700 transition-colors;
 }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+

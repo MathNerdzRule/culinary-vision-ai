@@ -20,6 +20,32 @@ export const AppProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'system';
   });
+  const [ourGroceriesLists, setOurGroceriesLists] = useState([]);
+  const [selectedListId, setSelectedListId] = useState(() => {
+    return localStorage.getItem('selectedListId') || null;
+  });
+
+  useEffect(() => {
+    const fetchLists = async () => {
+      try {
+        const lists = await ourGroceriesService.getLists();
+        setOurGroceriesLists(lists);
+        if (lists.length > 0 && !selectedListId) {
+          setSelectedListId(lists[0].id);
+        }
+      } catch (error) {
+        console.error('Error fetching OurGroceries lists:', error);
+      }
+    };
+    fetchLists();
+  }, []);
+
+  useEffect(() => {
+    if (selectedListId) {
+      localStorage.setItem('selectedListId', selectedListId);
+    }
+  }, [selectedListId]);
+
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -64,7 +90,7 @@ export const AppProvider = ({ children }) => {
     // Try to sync with OurGroceries
     setIsSyncing(true);
     try {
-      await ourGroceriesService.addItem(item.name);
+      await ourGroceriesService.addItem(item.name, selectedListId);
       setShoppingList(prev => prev.map(i => 
         i.name === item.name ? { ...i, synced: true } : i
       ));
@@ -102,10 +128,12 @@ export const AppProvider = ({ children }) => {
       activeRecipe, setActiveRecipe,
       isSyncing, syncStatus,
       isDemo, setIsDemo,
-      theme, setTheme
+      theme, setTheme,
+      ourGroceriesLists, selectedListId, setSelectedListId
     }}>
       {children}
     </AppContext.Provider>
+
   );
 };
 

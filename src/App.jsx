@@ -88,8 +88,9 @@ const Dashboard = ({ onOpenMenu }) => {
           <span className="text-sage-500">Kitchen today?</span>
         </h1>
         <p className="text-charcoal-500 dark:text-charcoal-400 text-lg md:text-xl max-w-2xl mx-auto">
-          Take a photo of your fridge and pantry. Our Chef AI will scan your ingredients and suggest the perfect meal.
+          Take a photo of your fridge and pantry. Gemini 3 will scan your ingredients and suggest the perfect meal.
         </p>
+
       </section>
 
       {/* Input Section */}
