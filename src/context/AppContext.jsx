@@ -10,8 +10,12 @@ export const AppProvider = ({ children }) => {
     const saved = localStorage.getItem('shoppingList');
     return saved ? JSON.parse(saved) : [];
   });
-  const [fridgeImage, setFridgeImage] = useState(null);
-  const [pantryImage, setPantryImage] = useState(null);
+  const [fridgeImages, setFridgeImages] = useState([]);
+  const [pantryImages, setPantryImages] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem('favorites');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeRecipe, setActiveRecipe] = useState(null);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -24,6 +28,43 @@ export const AppProvider = ({ children }) => {
   const [selectedListId, setSelectedListId] = useState(() => {
     return localStorage.getItem('selectedListId') || null;
   });
+
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const toggleFavorite = (recipe) => {
+    setFavorites(prev => {
+      const exists = prev.find(f => f.name === recipe.name);
+      if (exists) return prev.filter(f => f.name !== recipe.name);
+      return [...prev, recipe];
+    });
+  };
+
+  const addImage = (category, imageData) => {
+    if (category === 'Fridge') {
+      setFridgeImages(prev => [...prev, imageData]);
+    } else {
+      setPantryImages(prev => [...prev, imageData]);
+    }
+  };
+
+  const removeImage = (category, index) => {
+    if (category === 'Fridge') {
+      setFridgeImages(prev => prev.filter((_, i) => i !== index));
+    } else {
+      setPantryImages(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const clearImages = (category) => {
+    if (category === 'Fridge') {
+      setFridgeImages([]);
+    } else {
+      setPantryImages([]);
+    }
+  };
+
 
   useEffect(() => {
     const fetchLists = async () => {
@@ -121,9 +162,9 @@ export const AppProvider = ({ children }) => {
     <AppContext.Provider value={{
       dietaryPreferences, setDietaryPreferences,
       recipes, setRecipes,
+      favorites, toggleFavorite,
       shoppingList, addToShoppingList, removeFromShoppingList, toggleShoppingListItem, clearCompleted,
-      fridgeImage, setFridgeImage,
-      pantryImage, setPantryImage,
+      fridgeImages, pantryImages, addImage, removeImage, clearImages,
       isAnalyzing, setIsAnalyzing,
       activeRecipe, setActiveRecipe,
       isSyncing, syncStatus,
@@ -133,6 +174,7 @@ export const AppProvider = ({ children }) => {
     }}>
       {children}
     </AppContext.Provider>
+
 
   );
 };

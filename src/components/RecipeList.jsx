@@ -1,9 +1,13 @@
 import React from 'react';
-import { Clock, Flame, BarChart3, ChevronRight, CheckCircle2, ChevronDown, ChefHat } from 'lucide-react';
+import { Clock, Flame, BarChart3, ChevronRight, CheckCircle2, ChevronDown, ChefHat, Heart, Star } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
 
 import { motion } from 'framer-motion';
 
 export const RecipeCard = ({ recipe, onClick }) => {
+  const { favorites, toggleFavorite } = useAppContext();
+  const isFavorite = favorites.some(f => f.name === recipe.name);
+
   return (
     <motion.div
       layout
@@ -27,10 +31,21 @@ export const RecipeCard = ({ recipe, onClick }) => {
               {recipe.name}
             </h3>
           </div>
-          <div className="w-10 h-10 rounded-full bg-sage-500/10 flex items-center justify-center text-sage-500 opacity-0 group-hover:opacity-100 transition-opacity">
-            <ChevronRight size={20} />
-          </div>
+          <button 
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleFavorite(recipe);
+            }}
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+              isFavorite 
+                ? 'bg-red-500 text-white shadow-lg shadow-red-500/30' 
+                : 'bg-charcoal-50 dark:bg-white/5 text-charcoal-400 dark:text-charcoal-500 hover:text-red-500'
+            }`}
+          >
+            <Heart size={20} fill={isFavorite ? "currentColor" : "none"} />
+          </button>
         </div>
+
 
         <p className="text-sm text-charcoal-500 dark:text-charcoal-400 italic mb-6 line-clamp-2">
           "{recipe.rationale}"

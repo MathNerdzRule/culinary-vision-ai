@@ -11,8 +11,7 @@ import { Sparkles, Scan, Loader2, Menu, ChefHat, CheckCircle2, AlertCircle, Clou
 
 const Dashboard = ({ onOpenMenu }) => {
   const { 
-    fridgeImage, setFridgeImage, 
-    pantryImage, setPantryImage, 
+    fridgeImages, pantryImages, addImage, removeImage, clearImages,
     dietaryPreferences,
     setRecipes,
     isAnalyzing, setIsAnalyzing,
@@ -22,16 +21,17 @@ const Dashboard = ({ onOpenMenu }) => {
   } = useAppContext();
 
   const handleAnalyze = async () => {
-    if (!fridgeImage && !pantryImage) {
+    if (fridgeImages.length === 0 && pantryImages.length === 0) {
       alert("Please capture or upload at least one image (Fridge or Pantry).");
       return;
     }
 
     setIsAnalyzing(true);
     try {
-      const data = await analyzeIngredients(fridgeImage, pantryImage, dietaryPreferences);
+      const data = await analyzeIngredients(fridgeImages, pantryImages, dietaryPreferences);
       setRecipes(data.recipes);
       setIsDemo(data.isDemo);
+
       
       // Wait a moment for the scroll effect to be smooth
       setTimeout(() => {
@@ -93,29 +93,31 @@ const Dashboard = ({ onOpenMenu }) => {
 
       </section>
 
-      {/* Input Section */}
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <CameraSystem 
           label="Fridge" 
-          image={fridgeImage} 
-          onImageCapture={setFridgeImage} 
-          onImageClear={() => setFridgeImage(null)} 
+          images={fridgeImages} 
+          onAdd={(img) => addImage('Fridge', img)} 
+          onRemove={(idx) => removeImage('Fridge', idx)}
+          onClear={() => clearImages('Fridge')}
         />
         <CameraSystem 
           label="Pantry" 
-          image={pantryImage} 
-          onImageCapture={setPantryImage} 
-          onImageClear={() => setPantryImage(null)} 
+          images={pantryImages} 
+          onAdd={(img) => addImage('Pantry', img)} 
+          onRemove={(idx) => removeImage('Pantry', idx)}
+          onClear={() => clearImages('Pantry')}
         />
       </section>
 
-      {/* Action Section */}
+
       <div className="flex justify-center">
         <button
           onClick={handleAnalyze}
-          disabled={isAnalyzing || (!fridgeImage && !pantryImage)}
+          disabled={isAnalyzing || (fridgeImages.length === 0 && pantryImages.length === 0)}
           className="btn-primary flex items-center gap-3 px-12 py-5 text-xl font-bold group relative disabled:opacity-50"
         >
+
           {isAnalyzing ? (
             <>
               <Loader2 className="animate-spin" size={24} />
@@ -251,9 +253,19 @@ const MainApp = () => {
                   onRecipeSelect={setActiveRecipe}
                 />
 
+                {useAppContext().favorites.length > 0 && (
+                  <div className="mt-20 pt-10 border-t border-charcoal-200 dark:border-white/5">
+                    <h2 className="text-3xl font-bold text-charcoal-900 dark:text-white mb-10">Your Favorites</h2>
+                    <RecipeList 
+                      recipes={useAppContext().favorites} 
+                      onRecipeSelect={setActiveRecipe}
+                    />
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
+
         </AnimatePresence>
       </main>
 
