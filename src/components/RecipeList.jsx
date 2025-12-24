@@ -1,5 +1,6 @@
 import React from 'react';
-import { Clock, Flame, BarChart3, ChevronRight, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Clock, Flame, BarChart3, ChevronRight, CheckCircle2, ChevronDown, ChefHat } from 'lucide-react';
+
 import { motion } from 'framer-motion';
 
 export const RecipeCard = ({ recipe, onClick }) => {
