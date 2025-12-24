@@ -139,7 +139,6 @@ const Dashboard = ({ onOpenMenu }) => {
           </div>
           <RecipeList 
             recipes={recipes} 
-            onRecipeSelect={setActiveRecipe} 
             isLoading={isAnalyzing} 
           />
         </section>
@@ -247,7 +246,6 @@ const MainApp = () => {
                 <h2 className="text-3xl font-bold text-charcoal-900 dark:text-white mb-10">All Recipes</h2>
                 <RecipeList 
                   recipes={recipes} 
-                  onRecipeSelect={setActiveRecipe}
                 />
 
                 {useAppContext().favorites.length > 0 && (
@@ -255,7 +253,6 @@ const MainApp = () => {
                     <h2 className="text-3xl font-bold text-charcoal-900 dark:text-white mb-10">Your Favorites</h2>
                     <RecipeList 
                       recipes={useAppContext().favorites} 
-                      onRecipeSelect={setActiveRecipe}
                     />
                   </div>
                 )}

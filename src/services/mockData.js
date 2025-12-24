@@ -18,7 +18,8 @@ export const MOCK_RECIPES = [
       "Sauté diced bell peppers until softened, then add spinach until wilted.",
       "Pour the whisked eggs over the vegetables and sprinkle with feta if using.",
       "Cook for 3-4 minutes until edges are set, then transfer to a broiler for 2 minutes until golden on top."
-    ]
+    ],
+    prepItems: ["Medium mixing bowl", "Whisk", "Non-stick oven-safe skillet", "Spatula"]
   },
   {
     name: "Tuscan White Bean Stew",
@@ -39,7 +40,8 @@ export const MOCK_RECIPES = [
       "Use a wooden spoon to smash some of the beans against the side of the pot to thicken the broth.",
       "Stir in the chopped kale and cook until tender, about 5-8 minutes.",
       "Season with salt, pepper, and a squeeze of lemon if available."
-    ]
+    ],
+    prepItems: ["Large pot", "Wooden spoon", "Chef's knife", "Cutting board"]
   },
   {
     name: "Honey Garlic Glazed Carrots",
@@ -60,6 +62,7 @@ export const MOCK_RECIPES = [
       "In a small skillet, melt butter and whisk in honey and garlic powder.",
       "Add the carrots to the skillet and toss to coat thoroughly.",
       "Cook over medium-high heat for 3-4 minutes until the glaze thickens and carrots start to caramelize."
-    ]
+    ],
+    prepItems: ["Small skillet", "Whisk", "Peeler", "Chef's knife", "Large pot (for boiling)"]
   }
 ];

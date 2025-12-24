@@ -17,6 +17,7 @@ export const AppProvider = ({ children }) => {
   });
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeRecipe, setActiveRecipe] = useState(null);
+  const [recipeViewMode, setRecipeViewMode] = useState('details'); // 'details', 'ingredients', 'cooking'
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState(null);
   const [isDemo, setIsDemo] = useState(false);
@@ -155,6 +156,7 @@ export const AppProvider = ({ children }) => {
       kitchenImages, addImage, removeImage, clearImages,
       isAnalyzing, setIsAnalyzing,
       activeRecipe, setActiveRecipe,
+      recipeViewMode, setRecipeViewMode,
       isSyncing, syncStatus,
       isDemo, setIsDemo,
       theme, setTheme,

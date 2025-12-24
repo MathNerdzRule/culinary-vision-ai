@@ -4,9 +4,14 @@ import { useAppContext } from '../context/AppContext';
 
 import { motion } from 'framer-motion';
 
-export const RecipeCard = ({ recipe, onClick }) => {
-  const { favorites, toggleFavorite } = useAppContext();
+export const RecipeCard = ({ recipe }) => {
+  const { favorites, toggleFavorite, setActiveRecipe, setRecipeViewMode } = useAppContext();
   const isFavorite = favorites.some(f => f.name === recipe.name);
+
+  const handleSelect = (mode) => {
+    setRecipeViewMode(mode);
+    setActiveRecipe(recipe);
+  };
 
   return (
     <motion.div
@@ -14,20 +19,24 @@ export const RecipeCard = ({ recipe, onClick }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5 }}
-      onClick={onClick}
-      className="glass-card overflow-hidden cursor-pointer border border-charcoal-200 dark:border-white/5 hover:border-sage-500/30 transition-all duration-300 group"
+      className="glass-card overflow-hidden border border-charcoal-200 dark:border-white/5 hover:border-sage-500/30 transition-all duration-300 group"
     >
       <div className="p-6">
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-col gap-1">
-            <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded flex w-fit ${
+            <span 
+              onClick={() => handleSelect('cooking')}
+              className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded flex w-fit cursor-pointer hover:brightness-110 transition-all ${
               recipe.difficulty === 'Easy' ? 'bg-sage-500/20 text-sage-600 dark:text-sage-400' :
               recipe.difficulty === 'Medium' ? 'bg-amber-500/20 text-amber-600 dark:text-amber-400' :
               'bg-red-500/20 text-red-600 dark:text-red-400'
             }`}>
               {recipe.difficulty}
             </span>
-            <h3 className="text-xl font-bold text-charcoal-900 dark:text-white group-hover:text-sage-500 transition-colors">
+            <h3 
+              onClick={() => handleSelect('details')}
+              className="text-xl font-bold text-charcoal-900 dark:text-white group-hover:text-sage-500 transition-colors cursor-pointer"
+            >
               {recipe.name}
             </h3>
           </div>
@@ -47,7 +56,10 @@ export const RecipeCard = ({ recipe, onClick }) => {
         </div>
 
 
-        <p className="text-sm text-charcoal-500 dark:text-charcoal-400 italic mb-6 line-clamp-2">
+        <p 
+          onClick={() => handleSelect('details')}
+          className="text-sm text-charcoal-500 dark:text-charcoal-400 italic mb-6 line-clamp-2 cursor-pointer"
+        >
           "{recipe.rationale}"
         </p>
 
@@ -60,37 +72,59 @@ export const RecipeCard = ({ recipe, onClick }) => {
             <Flame size={14} className="text-amber-500" />
             <span>{recipe.calories} kcal</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div 
+            onClick={() => handleSelect('ingredients')}
+            className="flex items-center gap-2 cursor-pointer hover:text-sage-500 transition-colors"
+          >
             <BarChart3 size={14} className="text-sage-500" />
-            <span>{recipe.ingredients.length} ingredients</span>
+            <span className="font-bold underline decoration-sage-500/30 underline-offset-4">{recipe.ingredients.length} ingredients</span>
           </div>
         </div>
       </div>
       
       <div className="bg-charcoal-50 dark:bg-white/5 px-6 py-3 flex justify-between items-center border-t border-charcoal-200 dark:border-white/5">
-        <div className="flex -space-x-2">
+        <div 
+          onClick={() => handleSelect('ingredients')}
+          className="flex -space-x-2 cursor-pointer hover:translate-x-1 transition-transform"
+        >
           {recipe.ingredients.slice(0, 3).map((ing, i) => (
-            <div key={i} className={`w-6 h-6 rounded-full border border-white dark:border-charcoal-900 flex items-center justify-center text-[10px] font-bold ${
+            <div 
+              key={i} 
+              title={ing.name}
+              className={`w-6 h-6 rounded-full border border-white dark:border-charcoal-900 flex items-center justify-center text-[10px] font-bold shadow-sm ${
               ing.isAvailable ? 'bg-sage-500 text-white' : 'bg-charcoal-200 dark:bg-charcoal-700 text-charcoal-500 dark:text-charcoal-400'
             }`}>
               {ing.name[0].toUpperCase()}
             </div>
           ))}
           {recipe.ingredients.length > 3 && (
-            <div className="w-6 h-6 rounded-full border border-white dark:border-charcoal-900 bg-charcoal-100 dark:bg-charcoal-800 flex items-center justify-center text-[10px] font-bold text-charcoal-500 dark:text-charcoal-400">
+            <div className="w-6 h-6 rounded-full border border-white dark:border-charcoal-900 bg-charcoal-100 dark:bg-charcoal-800 flex items-center justify-center text-[10px] font-bold text-charcoal-500 dark:text-charcoal-400 shadow-sm">
               +{recipe.ingredients.length - 3}
             </div>
           )}
         </div>
-        <span className="text-[10px] font-medium text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider">
-          View Details
-        </span>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={() => handleSelect('details')}
+            className="text-[10px] font-bold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-widest hover:text-sage-500 transition-colors"
+          >
+            Details
+          </button>
+          <div className="w-[1px] h-3 bg-charcoal-200 dark:bg-white/10" />
+          <button 
+            onClick={() => handleSelect('cooking')}
+            className="text-[10px] font-black text-sage-600 dark:text-sage-400 uppercase tracking-widest hover:text-sage-500 transition-colors flex items-center gap-1"
+          >
+            Let's Cook
+            <ChevronRight size={12} />
+          </button>
+        </div>
       </div>
     </motion.div>
   );
 };
 
-export const RecipeList = ({ recipes, onRecipeSelect, isLoading }) => {
+export const RecipeList = ({ recipes, isLoading }) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -114,7 +148,7 @@ export const RecipeList = ({ recipes, onRecipeSelect, isLoading }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {recipes.map((recipe, index) => (
-        <RecipeCard key={index} recipe={recipe} onClick={() => onRecipeSelect(recipe)} />
+        <RecipeCard key={index} recipe={recipe} />
       ))}
     </div>
   );

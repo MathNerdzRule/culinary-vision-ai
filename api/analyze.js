@@ -51,6 +51,7 @@ export default async function handler(req, res) {
       - A brief rationale for why you suggested it (max 2 sentences).
       - Ingredients list, specifying if they are likely available based on the images.
       - Step-by-step instructions.
+      - A list of suggested prep items (tools) such as mixing bowls, specific knives, baking sheets, etc.
       
       Return the response in strict JSON format matching this schema:
       {
@@ -62,7 +63,8 @@ export default async function handler(req, res) {
             "calories": 350,
             "rationale": "...",
             "ingredients": [{ "name": "...", "amount": "...", "isAvailable": true }],
-            "instructions": ["Step 1", "Step 2"]
+            "instructions": ["Step 1", "Step 2"],
+            "prepItems": ["Mixing bowl", "Chef's knife", "..."]
           }
         ]
       }
