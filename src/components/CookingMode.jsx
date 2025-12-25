@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, Volume2, ShoppingCart, CheckCircle2, AlertCircle, Clock, Flame } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Volume2, Plus, CheckCircle2, AlertCircle, Clock, Flame } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 export const CookingMode = ({ recipe, onClose }) => {
@@ -125,7 +125,7 @@ export const CookingMode = ({ recipe, onClose }) => {
                     className="flex items-center gap-2 px-3 py-1.5 bg-white dark:bg-charcoal-900 border border-charcoal-200 dark:border-white/10 rounded-lg text-xs hover:border-amber-500/50 transition-all font-bold"
                    >
                      {ing.name}
-                     <ShoppingCart size={12} className="text-charcoal-400" />
+                     <Plus size={12} className="text-charcoal-400" />
                    </button>
                  ))}
               </div>
@@ -179,7 +179,7 @@ export const CookingMode = ({ recipe, onClose }) => {
                     </span>
                     {isMissing && (
                       <p className="text-[10px] text-amber-600 dark:text-amber-500 font-bold uppercase tracking-tighter">
-                        {inList ? 'Added to List' : 'Tap to Add to Shopping List'}
+                        {inList ? 'Added to List' : 'Tap to Add to List'}
                       </p>
                     )}
                   </div>
@@ -188,7 +188,7 @@ export const CookingMode = ({ recipe, onClose }) => {
                   <span className="text-sage-600 dark:text-sage-400 font-black text-xl">{ing.amount}</span>
                   {isMissing && (
                     <div className={`p-2 rounded-lg transition-colors ${inList ? 'bg-sage-500 text-white' : 'bg-amber-500/10 text-amber-600'}`}>
-                      {inList ? <CheckCircle2 size={18} /> : <ShoppingCart size={18} />}
+                      {inList ? <CheckCircle2 size={18} /> : <Plus size={18} />}
                     </div>
                   )}
                 </div>

@@ -150,43 +150,11 @@ const Dashboard = ({ onOpenMenu }) => {
 const MainApp = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { activeRecipe, setActiveRecipe, syncStatus, isSyncing, recipes } = useAppContext();
+  const { activeRecipe, setActiveRecipe, recipes, favorites } = useAppContext();
 
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row transition-colors duration-300">
-      {/* OurGroceries Sync Toast */}
-      <AnimatePresence>
-        {syncStatus && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 50, x: '-50%' }}
-            className="fixed bottom-10 left-1/2 z-[100] flex items-center gap-3 px-6 py-4 glass-card border-sage-500/50 shadow-2xl shadow-sage-500/20"
-          >
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center ${syncStatus.includes('Failed') ? 'bg-red-500/20 text-red-500' : 'bg-sage-500/20 text-sage-500'}`}>
-              {syncStatus.includes('Failed') ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold text-charcoal-900 dark:text-white leading-none">OurGroceries Sync</span>
-              <span className="text-xs text-charcoal-500 dark:text-charcoal-400 mt-1">{syncStatus}</span>
-            </div>
-          </motion.div>
-        )}
-
-        {isSyncing && !syncStatus && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, x: '-50%' }}
-            animate={{ opacity: 1, y: 0, x: '-50%' }}
-            exit={{ opacity: 0, y: 50, x: '-50%' }}
-            className="fixed bottom-10 left-1/2 z-[100] flex items-center gap-3 px-6 py-4 glass-card border-charcoal-200 dark:border-white/10"
-          >
-             <Loader2 className="animate-spin text-sage-500" size={18} />
-             <span className="text-sm font-medium text-charcoal-900 dark:text-white">Syncing with OurGroceries...</span>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <Sidebar 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
@@ -248,11 +216,11 @@ const MainApp = () => {
                   recipes={recipes} 
                 />
 
-                {useAppContext().favorites.length > 0 && (
+                {favorites.length > 0 && (
                   <div className="mt-20 pt-10 border-t border-charcoal-200 dark:border-white/5">
                     <h2 className="text-3xl font-bold text-charcoal-900 dark:text-white mb-10">Your Favorites</h2>
                     <RecipeList 
-                      recipes={useAppContext().favorites} 
+                      recipes={favorites} 
                     />
                   </div>
                 )}

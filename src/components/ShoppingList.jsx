@@ -1,10 +1,10 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Trash2, CheckCircle2, Circle, ShoppingBag, Plus, Cloud, CloudOff, RefreshCw } from 'lucide-react';
+import { Trash2, CheckCircle2, Circle, ShoppingBag, Plus } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 export const ShoppingList = () => {
-  const { shoppingList, removeFromShoppingList, toggleShoppingListItem, clearCompleted, syncStatus, isSyncing } = useAppContext();
+  const { shoppingList, removeFromShoppingList, toggleShoppingListItem, clearCompleted } = useAppContext();
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-6">
@@ -48,11 +48,6 @@ export const ShoppingList = () => {
                         <span className={`font-medium ${item.completed ? 'text-charcoal-300 dark:text-charcoal-500 line-through' : 'text-charcoal-900 dark:text-white'}`}>
                           {item.name}
                         </span>
-                        {item.synced ? (
-                          <Cloud size={14} className="text-sage-500" title="Synced with OurGroceries" />
-                        ) : (
-                          <CloudOff size={14} className="text-charcoal-400 dark:text-charcoal-500" title="Not synced" />
-                        )}
                       </div>
                       {item.amount && (
                         <span className="text-xs text-charcoal-400 dark:text-charcoal-500">{item.amount}</span>

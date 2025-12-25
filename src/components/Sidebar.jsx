@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAppContext } from '../context/AppContext';
-import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X, AlertCircle, Cloud } from 'lucide-react';
+import { Leaf, Flame, WheatOff, MilkOff, Carrot, ShoppingCart, Home, ChefHat, X, AlertCircle } from 'lucide-react';
 
 
 import { motion, AnimatePresence } from 'framer-motion';
@@ -20,10 +20,7 @@ const DIETARY_OPTIONS = [
 export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
   const { 
     dietaryPreferences, 
-    setDietaryPreferences, 
-    ourGroceriesLists, 
-    selectedListId, 
-    setSelectedListId 
+    setDietaryPreferences
   } = useAppContext();
 
   const togglePreference = (id) => {
@@ -115,33 +112,6 @@ export const Sidebar = ({ activeTab, setActiveTab, isOpen, setIsOpen }) => {
               ))}
             </div>
           </div>
-
-          {ourGroceriesLists.length > 0 && (
-            <div>
-              <div className="flex items-center gap-2 px-4 mb-4">
-                <Cloud size={14} className="text-sage-500" />
-                <h2 className="text-xs font-semibold text-charcoal-400 dark:text-charcoal-500 uppercase tracking-wider">
-                  Sync Destination
-                </h2>
-              </div>
-              <div className="px-4">
-                <select
-                  value={selectedListId || ''}
-                  onChange={(e) => setSelectedListId(e.target.value)}
-                  className="w-full bg-charcoal-50 dark:bg-charcoal-800 border-none rounded-xl text-sm p-3 text-charcoal-700 dark:text-white focus:ring-2 focus:ring-sage-500/50 outline-none cursor-pointer appearance-none transition-all"
-                >
-                  {ourGroceriesLists.map((list) => (
-                    <option key={list.id} value={list.id}>
-                      {list.name}
-                    </option>
-                  ))}
-                </select>
-                <p className="text-[10px] text-charcoal-400 dark:text-charcoal-500 mt-2">
-                  Syncing to: <span className="text-sage-500">{ourGroceriesLists.find(l => l.id === selectedListId)?.name}</span>
-                </p>
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="mt-auto pt-6 border-t border-charcoal-100 dark:border-white/5">

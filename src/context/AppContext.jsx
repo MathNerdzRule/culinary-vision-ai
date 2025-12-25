@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ourGroceriesService } from '../services/ourGroceries';
 
 const AppContext = createContext();
 
@@ -18,15 +17,9 @@ export const AppProvider = ({ children }) => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [activeRecipe, setActiveRecipe] = useState(null);
   const [recipeViewMode, setRecipeViewMode] = useState('details'); // 'details', 'ingredients', 'cooking'
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [syncStatus, setSyncStatus] = useState(null);
   const [isDemo, setIsDemo] = useState(false);
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'system';
-  });
-  const [ourGroceriesLists, setOurGroceriesLists] = useState([]);
-  const [selectedListId, setSelectedListId] = useState(() => {
-    return localStorage.getItem('selectedListId') || null;
   });
 
   useEffect(() => {
@@ -53,28 +46,6 @@ export const AppProvider = ({ children }) => {
     setKitchenImages([]);
   };
 
-
-
-  useEffect(() => {
-    const fetchLists = async () => {
-      try {
-        const lists = await ourGroceriesService.getLists();
-        setOurGroceriesLists(lists);
-        if (lists.length > 0 && !selectedListId) {
-          setSelectedListId(lists[0].id);
-        }
-      } catch (error) {
-        console.error('Error fetching OurGroceries lists:', error);
-      }
-    };
-    fetchLists();
-  }, []);
-
-  useEffect(() => {
-    if (selectedListId) {
-      localStorage.setItem('selectedListId', selectedListId);
-    }
-  }, [selectedListId]);
 
 
   useEffect(() => {
@@ -110,29 +81,11 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('shoppingList', JSON.stringify(shoppingList));
   }, [shoppingList]);
 
-  const addToShoppingList = async (item) => {
-    // Add to local list immediately for UI responsiveness
+  const addToShoppingList = (item) => {
     setShoppingList(prev => {
       if (prev.find(i => i.name === item.name)) return prev;
-      return [...prev, { ...item, id: Date.now(), completed: false, synced: false }];
+      return [...prev, { ...item, id: Date.now(), completed: false }];
     });
-
-    // Try to sync with OurGroceries
-    setIsSyncing(true);
-    try {
-      await ourGroceriesService.addItem(item.name, selectedListId);
-      setShoppingList(prev => prev.map(i => 
-        i.name === item.name ? { ...i, synced: true } : i
-      ));
-      setSyncStatus(`Added ${item.name} to OurGroceries!`);
-      setTimeout(() => setSyncStatus(null), 3000);
-    } catch (error) {
-      console.error('Failed to sync with OurGroceries:', error);
-      setSyncStatus('Failed to sync with OurGroceries. Check settings.');
-      setTimeout(() => setSyncStatus(null), 5000);
-    } finally {
-      setIsSyncing(false);
-    }
   };
 
   const removeFromShoppingList = (id) => {
@@ -157,16 +110,11 @@ export const AppProvider = ({ children }) => {
       isAnalyzing, setIsAnalyzing,
       activeRecipe, setActiveRecipe,
       recipeViewMode, setRecipeViewMode,
-      isSyncing, syncStatus,
       isDemo, setIsDemo,
-      theme, setTheme,
-      ourGroceriesLists, selectedListId, setSelectedListId
+      theme, setTheme
     }}>
       {children}
     </AppContext.Provider>
-
-
-
   );
 };
 
