@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Camera, Upload, X, Check, RefreshCw, AlertCircle } from 'lucide-react';
+import { Camera, Upload, X, Check, RefreshCw, AlertCircle, Plus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
@@ -7,6 +7,7 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const nativeCameraRef = useRef(null);
+  const fileUploadRef = useRef(null);
   const [stream, setStream] = useState(null);
 
   // Effect to attach stream to video element when it mounts
@@ -94,14 +95,16 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
   };
 
   const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const files = Array.from(e.target.files);
+    files.forEach(file => {
       const reader = new FileReader();
       reader.onloadend = () => {
         onAdd(reader.result);
       };
       reader.readAsDataURL(file);
-    }
+    });
+    // Reset input so the same files can be selected again
+    e.target.value = '';
   };
 
   return (
@@ -114,6 +117,16 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
         className="hidden" 
         ref={nativeCameraRef}
         onChange={handleNativeCamera}
+      />
+
+      {/* Hidden File Upload Input - Supports multiple files */}
+      <input 
+        type="file" 
+        accept="image/*" 
+        multiple
+        className="hidden" 
+        ref={fileUploadRef}
+        onChange={handleFileUpload}
       />
 
       <div className="flex items-center justify-between">
@@ -176,15 +189,24 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
                   </button>
                 </div>
               ))}
-              <button 
-                onClick={() => nativeCameraRef.current?.click()}
-                className="aspect-square rounded-xl border-2 border-dashed border-charcoal-300 dark:border-charcoal-700 flex flex-col items-center justify-center gap-2 text-charcoal-400 dark:text-charcoal-500 hover:border-sage-500 hover:text-sage-500 transition-all bg-white/50 dark:bg-transparent"
-              >
-                <div className="w-10 h-10 rounded-full bg-charcoal-100 dark:bg-charcoal-800 flex items-center justify-center">
-                  <Camera size={20} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest">Add Photo</span>
-              </button>
+              
+              <div className="aspect-square rounded-xl border-2 border-dashed border-charcoal-300 dark:border-charcoal-700 flex flex-col gap-1 p-1 bg-white/50 dark:bg-transparent overflow-hidden">
+                <button 
+                  onClick={() => nativeCameraRef.current?.click()}
+                  className="flex-1 flex flex-col items-center justify-center gap-1 text-charcoal-400 dark:text-charcoal-500 hover:text-sage-500 hover:bg-sage-500/5 transition-all rounded-lg"
+                >
+                  <Camera size={18} />
+                  <span className="text-[9px] font-bold uppercase tracking-tight">Camera</span>
+                </button>
+                <div className="h-[1px] bg-charcoal-200 dark:bg-charcoal-700 mx-2" />
+                <button 
+                  onClick={() => fileUploadRef.current?.click()}
+                  className="flex-1 flex flex-col items-center justify-center gap-1 text-charcoal-400 dark:text-charcoal-500 hover:text-sage-500 hover:bg-sage-500/5 transition-all rounded-lg"
+                >
+                  <Upload size={18} />
+                  <span className="text-[9px] font-bold uppercase tracking-tight">Upload</span>
+                </button>
+              </div>
             </motion.div>
           ) : (
             <motion.div
@@ -211,11 +233,13 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
                   <Camera size={20} />
                   <span className="text-[10px] uppercase font-black tracking-widest">Camera</span>
                 </button>
-                <label className="btn-secondary flex flex-col items-center gap-2 py-3 px-6 min-w-[100px] cursor-pointer">
+                <button 
+                  onClick={() => fileUploadRef.current?.click()}
+                  className="btn-secondary flex flex-col items-center gap-2 py-3 px-6 min-w-[100px]"
+                >
                   <Upload size={20} />
                   <span className="text-[10px] uppercase font-black tracking-widest">Upload</span>
-                  <input type="file" accept="image/*" className="hidden" onChange={handleFileUpload} />
-                </label>
+                </button>
               </div>
             </motion.div>
           )}
@@ -226,3 +250,4 @@ export const CameraSystem = ({ label, images, onAdd, onRemove, onClear }) => {
     </div>
   );
 };
+
